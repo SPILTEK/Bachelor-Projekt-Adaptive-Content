@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Addition.unity
     guid: 268a0620cf0ce5040af39fb140c30f67
+  - enabled: 1
+    path: Assets/Scenes/Division.unity
+    guid: 61415a19a8f7f3e4f988252ec5469bb7
+  - enabled: 1
+    path: Assets/Scenes/Multiplication.unity
+    guid: 68765c8171ad3674d9a63cc721f2cfa9
+  - enabled: 1
+    path: Assets/Scenes/Subtraction.unity
+    guid: b696693d778dea4469a294b4dd4cd440
   m_configObjects: {}
