@@ -26,7 +26,7 @@ public class Equation : MonoBehaviour
         
     }
 
-    public void AnswerCheck() //checks if answer is right
+    public void AnswerCheck() //checks if answer is right when clicking button
     {
         string input = inputField.text;
 
@@ -59,10 +59,10 @@ public class Equation : MonoBehaviour
         answer.text = "Rigtig";
         answer.color = Color.green;
         yield return new WaitForSeconds(1f);
-        enter.interactable = true;
         answer.text = "Svar venligst";
         answer.color = Color.black;
         StartCoroutine(NewMath());
+        enter.interactable = true;
     }
 
 
