@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,7 +49,7 @@ public class MinusEquation : MonoBehaviour
         number1 = Random.Range(1,21); //last value is max-1
         number2 = Random.Range(1, number1+1);
 
-        text.text = number1 +  "-" + number2;
+        text.text = number1 + "−" + number2;
         
         yield return null;
     }
