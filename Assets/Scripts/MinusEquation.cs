@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SocialPlatforms;
 
 public class MinusEquation : MonoBehaviour
 {
@@ -12,14 +11,16 @@ public class MinusEquation : MonoBehaviour
     public TMP_InputField inputField;
     public TMP_Text answer;
     public Button enter;
-    public int minScore;
+    public TMP_Text scoreText;
+    public int subScore;
     int number1;
     int number2;
 
     // Start is called before the first frame update
     void Start()
     {
-        minScore = PlayerPrefs.GetInt("minPoints");
+        subScore = PlayerPrefs.GetInt("subPoints");
+        scoreText.text = subScore.ToString();
         StartCoroutine(NewMath());
     }
 
@@ -63,12 +64,12 @@ public class MinusEquation : MonoBehaviour
         answer.text = "Rigtig";
         answer.color = Color.green;
 
-        minScore++; //add to score counter
+        subScore++; //add to score counter
 
-        PlayerPrefs.SetInt("minPoints", minScore); //set new score,
-        Debug.Log(PlayerPrefs.GetInt("minPoints")); //show new score
+        PlayerPrefs.SetInt("subPoints", subScore); //set new score,
+        Debug.Log(PlayerPrefs.GetInt("subPoints")); //show new score
 
-
+        scoreText.text = subScore.ToString();
         yield return new WaitForSeconds(1f);
         answer.text = "Svar venligst";
         answer.color = Color.black;

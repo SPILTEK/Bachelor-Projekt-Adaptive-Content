@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SocialPlatforms;
 
 public class DivisionEquation : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class DivisionEquation : MonoBehaviour
     public TMP_InputField inputField;
     public TMP_Text answer;
     public Button enter;
+    public TMP_Text scoreText;
     public int divScore;
     int number1;
     int number2;
@@ -21,7 +21,8 @@ public class DivisionEquation : MonoBehaviour
     void Start()
     {
     divScore = PlayerPrefs.GetInt("divPoints");
-    StartCoroutine(NewMath());
+        scoreText.text = divScore.ToString();
+        StartCoroutine(NewMath());
     }
 
     // Update is called once per frame
@@ -70,6 +71,7 @@ public class DivisionEquation : MonoBehaviour
         PlayerPrefs.SetInt("divPoints", divScore); //set new score,
         Debug.Log(PlayerPrefs.GetInt("divPoints")); //show new score
 
+        scoreText.text = divScore.ToString();
         yield return new WaitForSeconds(1f);
         answer.text = "Svar venligst";
         answer.color = Color.black;
