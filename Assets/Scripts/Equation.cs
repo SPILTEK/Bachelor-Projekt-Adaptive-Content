@@ -29,6 +29,7 @@ public class Equation : MonoBehaviour
     public void AnswerCheck() //checks if answer is right when clicking button
     {
         string input = inputField.text;
+        input = input.Trim();
 
         if (input == (number1+number2).ToString()) 
         {
