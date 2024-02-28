@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Equation : MonoBehaviour
+public class PlusEquation : MonoBehaviour
 {
 
     public TMP_Text text;
