@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SocialPlatforms;
 
 public class GangeEquation : MonoBehaviour
 {
@@ -11,12 +12,14 @@ public class GangeEquation : MonoBehaviour
     public TMP_InputField inputField;
     public TMP_Text answer;
     public Button enter;
+    public int mulScore;
     int number1;
     int number2;
 
     // Start is called before the first frame update
     void Start()
     {
+        mulScore = PlayerPrefs.GetInt("mulPoints");
         StartCoroutine(NewMath());
     }
 
@@ -59,6 +62,12 @@ public class GangeEquation : MonoBehaviour
         enter.interactable = false;
         answer.text = "Rigtig";
         answer.color = Color.green;
+
+        mulScore++; //add to score counter
+
+        PlayerPrefs.SetInt("mulPoints", mulScore); //set new score,
+        Debug.Log(PlayerPrefs.GetInt("mulPoints")); //show new score
+
         yield return new WaitForSeconds(1f);
         answer.text = "Svar venligst";
         answer.color = Color.black;

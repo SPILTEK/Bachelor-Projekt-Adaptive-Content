@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SocialPlatforms;
 
 public class PlusEquation : MonoBehaviour
 {
@@ -11,12 +12,14 @@ public class PlusEquation : MonoBehaviour
     public TMP_InputField inputField;
     public TMP_Text answer;
     public Button enter;
+    public int addScore;
     int number1;
     int number2;
 
     // Start is called before the first frame update
     void Start()
     {
+        addScore = PlayerPrefs.GetInt("addPoints");
         StartCoroutine(NewMath());
     }
 
@@ -59,6 +62,13 @@ public class PlusEquation : MonoBehaviour
         enter.interactable = false;
         answer.text = "Rigtig";
         answer.color = Color.green;
+
+        addScore++; //add to score counter
+
+        PlayerPrefs.SetInt("addPoints", addScore); //set new score,
+        Debug.Log(PlayerPrefs.GetInt("addPoints")); //show new score
+
+
         yield return new WaitForSeconds(1f);
         answer.text = "Svar venligst";
         answer.color = Color.black;
