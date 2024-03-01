@@ -74,6 +74,7 @@ public class GangeEquation : MonoBehaviour
         answer.text = "Svar venligst";
         answer.color = Color.black;
         StartCoroutine(NewMath());
+        inputField.text = "";
         enter.interactable = true;
     }
 
