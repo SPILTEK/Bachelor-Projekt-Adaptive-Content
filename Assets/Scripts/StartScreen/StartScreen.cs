@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StartScreen : MonoBehaviour
 {
@@ -33,7 +34,14 @@ public class StartScreen : MonoBehaviour
 
     void FadeOut()
     {
-        loadScreen.SetActive(false);
+        if(PlayerPrefs.GetInt("PopUpSkipper") == 1)
+        {
+            SceneManager.LoadScene("Menu");
+        }
+       else
+        {
+            loadScreen.SetActive(false);
+        }
     }
 
 }
