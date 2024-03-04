@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MenuUI : MonoBehaviour
 {
@@ -10,25 +11,16 @@ public class MenuUI : MonoBehaviour
     public Transform buttonsParentTransform;
     private RectTransform rectTransform;
     public List<Transform> buttonsList; // List to store the children of the current button
-    public List<GameObject> buttonsInfoList = new List<GameObject>(); // List to store the children of the current buttons info
-    public float yOffset = 100f;
-    public float heightOffset = 100f;
-    public float rotationAmount = 45f;
-    public float animationSpeed = 0.5f;
+    private float yOffset = 25f;
+    private float heightOffset = 100f;
+    private float rotationAmount = 45f;
+    private float animationSpeed = 0.5f;
     public bool isToggled = false;
 
     // Start is called before the first frame update
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-
-        // Find all info boxes and add them to a list which is reversed to get the right order
-        GameObject[] foundObjects = GameObject.FindGameObjectsWithTag("Info");
-        foreach (GameObject obj in foundObjects)
-        {
-            buttonsInfoList.Add(obj);
-        }
-        buttonsInfoList.Reverse();
     }
 
     // Update is called once per frame
@@ -56,10 +48,17 @@ public class MenuUI : MonoBehaviour
                 // Add the child to the list
                 buttonsList.Add(child);
             }
+
+            RectTransform buttonInfoRect = EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(2).GetComponent<RectTransform>();
+            // Makes the last info box move because the for loop goes out of range
+            if (parentIndex == 3)
+            {
+                RectTransform buttonRect = buttonsList[4].GetComponent<RectTransform>();
+                StartCoroutine(moveDownCoroutine(buttonRect, buttonInfoRect));
+            }
             for (int i = parentIndex + 1; i < buttonsList.Count; i++)
             {
                 RectTransform buttonRect = buttonsList[i].GetComponent<RectTransform>();
-                RectTransform buttonInfoRect = buttonsInfoList[i].GetComponent<RectTransform>();
 
                 // Modify the position in coroutine
                 StartCoroutine(moveDownCoroutine(buttonRect, buttonInfoRect));
@@ -78,15 +77,25 @@ public class MenuUI : MonoBehaviour
                 // Add the child to the list
                 buttonsList.Add(child);
             }
+
+            RectTransform buttonInfoRect = EventSystem.current.currentSelectedGameObject.transform.parent.GetChild(2).GetComponent<RectTransform>();
+            // Makes the last info box move because the for loop goes out of range
+            if (parentIndex == 3)
+            {
+                RectTransform buttonRect = buttonsList[4].GetComponent<RectTransform>();
+                StartCoroutine(moveUpCoroutine(buttonRect, buttonInfoRect));
+            }
             for (int i = parentIndex + 1; i < buttonsList.Count; i++)
             {
                 RectTransform buttonRect = buttonsList[i].GetComponent<RectTransform>();
-                RectTransform buttonInfoRect = buttonsInfoList[i].GetComponent<RectTransform>();
 
                 // Modify the position in coroutine
                 StartCoroutine(moveUpCoroutine(buttonRect, buttonInfoRect));
             }
         }
+        //Passes current button through to coroutine
+        Button currentButton = EventSystem.current.currentSelectedGameObject.transform.GetComponent<Button>();
+        StartCoroutine(DisableEnableButton(currentButton));
         isToggled = !isToggled;
     }
 
@@ -133,7 +142,33 @@ public class MenuUI : MonoBehaviour
     {
         Vector2 startPositionButton = currentButton.anchoredPosition;
         Vector2 targetPositionButton = startPositionButton + new Vector2(0, -yOffset);
-        Vector2 startHeightInfo = currentButton.sizeDelta;
+        Vector2 startHeightInfo = currentInfo.sizeDelta;
+        Vector2 targetHeightInfo = startHeightInfo + new Vector2(0, heightOffset);
+
+        float timeElapsed = 0f;
+
+        while (timeElapsed < animationSpeed)
+        {
+            timeElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(timeElapsed / animationSpeed);
+
+            currentButton.anchoredPosition = Vector2.Lerp(startPositionButton, targetPositionButton, t);
+            currentInfo.sizeDelta = Vector2.Lerp(startHeightInfo, targetHeightInfo, t);
+
+            yield return null;
+        }
+
+        currentButton.anchoredPosition = targetPositionButton; // Ensure we reach the exact target rotation
+        currentInfo.sizeDelta = targetHeightInfo; // Ensure we reach the exact target height
+
+    }
+
+    //Handles moving the buttons up with relation to time
+    private IEnumerator moveUpCoroutine(RectTransform currentButton, RectTransform currentInfo)
+    {
+        Vector2 startPositionButton = currentButton.anchoredPosition;
+        Vector2 targetPositionButton = startPositionButton + new Vector2(0, yOffset);
+        Vector2 startHeightInfo = currentInfo.sizeDelta;
         Vector2 targetHeightInfo = startHeightInfo + new Vector2(0, -heightOffset);
 
         float timeElapsed = 0f;
@@ -153,26 +188,11 @@ public class MenuUI : MonoBehaviour
         currentInfo.sizeDelta = targetHeightInfo; // Ensure we reach the exact target height
     }
 
-    //Handles moving the buttons up with relation to time
-    private IEnumerator moveUpCoroutine(RectTransform currentButton, RectTransform currentInfo)
+    private IEnumerator DisableEnableButton(Button currentButton)
     {
-        Vector2 startPositionButton = currentButton.anchoredPosition;
-        Vector2 targetPositionButton = startPositionButton + new Vector2(0, yOffset);
-        float startHeightInfo = currentButton.rect.height;
-        float targetHeightInfo = startHeightInfo - heightOffset;
-
-        float timeElapsed = 0f;
-
-        while (timeElapsed < animationSpeed)
-        {
-            timeElapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(timeElapsed / animationSpeed);
-
-            currentButton.anchoredPosition = Vector2.Lerp(startPositionButton, targetPositionButton, t);
-            yield return null;
-        }
-
-        currentButton.anchoredPosition = targetPositionButton; // Ensure we reach the exact target rotation
+        //Disable and enable button after set time
+        currentButton.interactable = false;
+        yield return new WaitForSeconds(0.5f);
+        currentButton.interactable = true;
     }
-
 }
